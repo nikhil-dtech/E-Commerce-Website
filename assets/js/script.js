@@ -1,34 +1,27 @@
 'use strict';
 
-// modal variables
 const modal = document.querySelector('[data-modal]');
 const modalCloseBtn = document.querySelector('[data-modal-close]');
 const modalCloseOverlay = document.querySelector('[data-modal-overlay]');
 
-// modal function
 const modalCloseFunc = function () { modal.classList.add('closed') }
 
-// modal eventListener
 modalCloseOverlay.addEventListener('click', modalCloseFunc);
 modalCloseBtn.addEventListener('click', modalCloseFunc);
 
-// notification toast variables
 const notificationToast = document.querySelector('[data-toast]');
 const toastCloseBtn = document.querySelector('[data-toast-close]');
 
-// notification toast eventListener
 toastCloseBtn.addEventListener('click', function () {
     notificationToast.classList.add('closed');
 });
 
-// mobile menu variables
 const mobileMenuOpenBtn = document.querySelectorAll('[data-mobile-menu-open-btn]');
 const mobileMenu = document.querySelectorAll('[data-mobile-menu]');
 const mobileMenuCloseBtn = document.querySelectorAll('[data-mobile-menu-close-btn]');
 const overlay = document.querySelector('[data-overlay]');
 
 for (let i = 0; i < mobileMenuOpenBtn.length; i++) {
-    // mobile menu function
     const mobileMenuCloseFunc = function () {
         mobileMenu[i].classList.remove('active');
         overlay.classList.remove('active');
@@ -43,7 +36,6 @@ for (let i = 0; i < mobileMenuOpenBtn.length; i++) {
     overlay.addEventListener('click', mobileMenuCloseFunc);
 }
 
-// accordion variables
 const accordionBtn = document.querySelectorAll('[data-accordion-btn]');
 const accordion = document.querySelectorAll('[data-accordion]');
 
@@ -65,25 +57,18 @@ for (let i = 0; i < accordionBtn.length; i++) {
     });
 }
 
-// Cart and Wishlist functionality
 document.addEventListener('DOMContentLoaded', function () {
-    // Initialize cart from localStorage or empty array
     let cart = JSON.parse(localStorage.getItem('cart')) || [];
-
-    // Initialize wishlist from localStorage or empty array
     let wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
 
-    // --- Cart Sidebar Elements ---
     const cartSidebar = document.getElementById('cart-sidebar');
     const closeCartBtn = document.querySelector('.close-cart-btn');
     const cartItemsList = document.getElementById('cart-items-list');
     const cartTotalAmount = document.getElementById('cart-total-amount');
 
-    // --- Wishlist Sidebar Elements ---
     const wishlistSidebar = document.getElementById('wishlist-sidebar');
     const closeWishlistBtn = document.getElementById('close-wishlist-sidebar');
 
-    // --- Helper Functions ---
     function getCart() {
         return JSON.parse(localStorage.getItem('cart')) || [];
     }
@@ -100,7 +85,6 @@ document.addEventListener('DOMContentLoaded', function () {
         localStorage.setItem('wishlist', JSON.stringify(wishlist));
     }
 
-    // Update cart count in the UI
     function updateCartCount() {
         const cart = getCart();
         const totalItems = cart.reduce((total, item) => total + (item.qty || 1), 0);
@@ -110,13 +94,11 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // Update wishlist count in the UI
     function updateWishlistCount() {
         const wishlist = getWishlist();
         document.querySelectorAll('.action-btn .count')[1].textContent = wishlist.length;
     }
 
-    // Render cart items in sidebar
     function renderCartSidebar() {
         const cart = getCart();
         cartItemsList.innerHTML = '';
@@ -130,7 +112,6 @@ document.addEventListener('DOMContentLoaded', function () {
         let total = 0;
 
         cart.forEach((item, idx) => {
-            // Ensure price is treated as a number
             const price = typeof item.price === 'string' ?
                 parseFloat(item.price.replace(/[^0-9.-]+/g, '')) :
                 item.price;
@@ -157,7 +138,6 @@ document.addEventListener('DOMContentLoaded', function () {
         cartTotalAmount.textContent = '$' + total.toFixed(2);
     }
 
-    // Render wishlist items in sidebar
     function renderWishlistSidebar() {
         const wishlist = getWishlist();
         const wishlistItemsList = document.getElementById('wishlist-items-list');
@@ -185,7 +165,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // --- Cart Functions (attached to window for HTML onclick) ---
     window.updateCartQty = function (idx, delta) {
         const cart = getCart();
         if (cart[idx]) {
@@ -213,9 +192,6 @@ document.addEventListener('DOMContentLoaded', function () {
         updateWishlistCount();
     }
 
-    // --- Event Listeners ---
-
-    // Open cart sidebar when cart icon is clicked
     document.querySelectorAll('.action-btn[aria-label="Cart"], #cart-btn').forEach(btn => {
         btn.addEventListener('click', () => {
             cartSidebar.classList.add('open');
@@ -223,14 +199,12 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    // Close cart sidebar
     if (closeCartBtn) {
         closeCartBtn.addEventListener('click', () => {
             cartSidebar.classList.remove('open');
         });
     }
 
-    // Open wishlist sidebar
     document.querySelectorAll('#wishlist-btn').forEach(btn => {
         btn.addEventListener('click', () => {
             wishlistSidebar.classList.add('open');
@@ -238,14 +212,12 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    // Close wishlist sidebar
     if (closeWishlistBtn) {
         closeWishlistBtn.addEventListener('click', () => {
             wishlistSidebar.classList.remove('open');
         });
     }
 
-    // Add to cart functionality for all add-to-cart buttons
     document.querySelectorAll('.add-cart-btn, .btn-action[aria-label="Add to cart"], .btn-action ion-icon[name="bag-add-outline"]').forEach(btn => {
         btn.addEventListener('click', function (e) {
             e.preventDefault();
@@ -276,15 +248,12 @@ document.addEventListener('DOMContentLoaded', function () {
             updateCartCount();
             renderCartSidebar();
 
-            // Show cart sidebar when adding an item
             cartSidebar.classList.add('open');
 
-            // Show notification
             alert('Added to cart!');
         });
     });
 
-    // Add to wishlist functionality
     document.querySelectorAll('.btn-action ion-icon[name="heart-outline"]').forEach(btn => {
         btn.parentElement.addEventListener('click', function (e) {
             e.preventDefault();
@@ -298,7 +267,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
             let wishlist = getWishlist();
 
-            // Check if item already exists in wishlist
             if (!wishlist.some(item => item.title === title)) {
                 wishlist.push({ title, price, img });
                 setWishlist(wishlist);
@@ -311,14 +279,12 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    // Clear cart
     document.getElementById('clear-cart-btn')?.addEventListener('click', function () {
         localStorage.removeItem('cart');
         updateCartCount();
         renderCartSidebar();
     });
 
-    // Search functionality
     const searchInput = document.querySelector('.search-field');
     searchInput?.addEventListener('input', function () {
         const query = this.value.toLowerCase();
@@ -328,7 +294,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    // Initialize counts
     updateCartCount();
     updateWishlistCount();
 });
